@@ -120,6 +120,17 @@
         
         <xsl:apply-templates select="testcase" mode="tableline">
         </xsl:apply-templates>
+        
+        <footer class="clearfix output">
+            <div class="sysout">
+                <h2>Standard output</h2>
+                <pre><xsl:value-of select="system-out" /></pre>
+            </div>
+            <div class="syserr">
+                <h2>System error</h2>
+                <pre><xsl:value-of select="system-err" /></pre>
+            </div>
+        </footer>
     </div>
 </xsl:template>
 
@@ -240,6 +251,22 @@
     border-bottom: 1px solid #BE5B5B;
 }
 
+.testsuite.failure header {
+    -moz-border-radius: 5px 5px 0 0;
+    -webkit-border-radius: 5px 5px 0 0;    
+    border-radius: 5px 5px 0 0;
+    
+    -moz-box-shadow: 0 0 13px rgba(255, 255, 255, 0.3) inset;
+    -webkit-box-shadow: 0 0 13px rgba(255, 255, 255, 0.3) inset;
+    box-shadow: 0 0 13px rgba(255, 255, 255, 0.3) inset;
+    
+    background: -moz-linear-gradient(center top , #EFB77E, #E69814);
+    background: -webkit-gradient(linear, left top, left bottom, from(#EFB77E), to(#E69814));
+    background: linear-gradient(center top , #EFB77E, #E69814);
+    
+    border-bottom: 1px solid #CD912B;
+}
+
 .testsuite.success header {
     -moz-border-radius: 5px 5px 0 0;
     -webkit-border-radius: 5px 5px 0 0;
@@ -257,7 +284,7 @@
 }
 
 .testsuite header {
-    font-size: 1.4em;
+    font-size: 1.3em;
 }
 
 .testsuite header h2, h3 {
@@ -298,7 +325,7 @@
 
 .metadata .testname {
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1.0em;
 }
 
 p {
@@ -310,9 +337,35 @@ p {
     width: 69%;
 }
 
+footer.output {
+    -moz-border-radius: 0 0 5px 5px;
+    -webkit-border-radius: 0 0 5px 5px;
+    border-radius: 0 0 5px 5px;
+    
+    background: -moz-linear-gradient(center top , #F8F8F8, #F2F2F2);
+    background: -webkit-gradient(linear, left top, left bottom, from(#F8F8F8), to(#F2F2F2));
+    background: linear-gradient(center top , #F8F8F8, #F2F2F2);
+    
+    border-top: 1px solid #EEEEEE;
+    margin-top: 10px;
+}
+
+footer.output h2 {
+    padding: 5px 0 0 5px;
+}
+
+footer.output .sysout, .syserr {
+    width: 50%;
+    float: left;
+}
+
+footer.output pre {
+    margin: 5px;
+}
+
 .errorMessage {
     color: #AA0E0E;
-    font-size: 1.2em;
+    font-size: 1.0em;
     font-weight: bold;
     padding: 4px 8px;
 }
