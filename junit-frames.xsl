@@ -323,34 +323,27 @@
 	               <xsl:attribute name="class">icon <xsl:value-of select="$cssclass" /></xsl:attribute>
 	            </span>
                 <b>
-                    <xsl:attribute name="class">testname <xsl:value-of select="$cssclass" /></xsl:attribute>
+                    <xsl:attribute name="class">testname message <xsl:value-of select="$cssclass" /></xsl:attribute>
                     <xsl:value-of select="@name" />
                 </b>
             </p>
                 
             <p>Executed in <xsl:value-of select="@time" /> seconds.</p>           
         </div>
-        <div class="details">
-            <xsl:apply-templates select="failure" mode="testcase.failure" />
-            <xsl:apply-templates select="error" mode="testcase.error" />            
+        
+        
+        <div class="outputinfo">
+            <xsl:apply-templates select="failure | error" mode="testcase.details" />            
         </div>
     </div>
 </xsl:template>
 
 <!-- Test failure -->
-<xsl:template match="failure" mode="testcase.failure">
-	<div class="failure">
-	    <p><b class="errorMessage failure"><xsl:value-of select="@message" /></b></p>
+<xsl:template match="failure | error" mode="testcase.details">
+	<div class="details">
+	    <p><b class="message"><xsl:value-of select="@message" /></b></p>
 	    <pre><xsl:value-of select="." /></pre>
     </div>
-</xsl:template>
-
-<!-- Test error -->
-<xsl:template match="error" mode="testcase.error">
-	<div class="error">
-	    <p><b class="errorMessage error"><xsl:value-of select="@message" /></b></p>
-	    <pre><xsl:value-of select="." /></pre>
-	</div>
 </xsl:template>
 
 <!-- this is the stylesheet css to use for nearly everything -->
@@ -498,8 +491,12 @@
     padding: 5px 0;
 }
 
-.testcase.failure .testname {
+.testcase.error .message {
     color: #AA0E0E;
+}
+
+.testcase.failure .message {
+    color: #FB6C00 !important;
 }
 
 .testsuite .testcase:nth-of-type(2n) {
@@ -513,20 +510,18 @@
     width: 30%;
 }
 
-.metadata .testname {
+.testcase .message {
     font-size: 1em;
     font-weight: bold;
 }
 
-.testname.failure {
-    color: #FB6C00 !important;
-}
+
 
 p {
     padding: 4px;
 }
 
-.testcase .details {
+.testcase .outputinfo {
     float: left;
     width: 69%;
 }
@@ -663,60 +658,6 @@ pre {
     <xsl:param name="package.name"/>
     <a title="Home"><xsl:attribute name="href"><xsl:if test="not($package.name = 'unnamed package')"><xsl:call-template name="path"><xsl:with-param name="path" select="$package.name"/></xsl:call-template></xsl:if>index.html</xsl:attribute><div class="grailslogo"></div></a>
 </xsl:template>
-
-<xsl:template match="testcase" mode="print.test">
-    <xsl:param name="show.class" select="''"/>
-    <tr valign="top">
-        <xsl:attribute name="class">
-            <xsl:choose>
-                <xsl:when test="error">Error</xsl:when>
-                <xsl:when test="failure">Failure</xsl:when>
-                <xsl:otherwise>TableRowColor</xsl:otherwise>
-            </xsl:choose>
-        </xsl:attribute>
-        <!-- Handle empty packages -->
-        <xsl:variable name="package.path">
-            <xsl:if test="../@package != ''"><xsl:value-of select="concat(translate(../@package,'.','/'), '/')"/></xsl:if>
-        </xsl:variable>
-	<xsl:variable name="class.href">
-	    <xsl:value-of select="concat($package.path, ../@id, '_', ../@name, '.html')"/>
-	</xsl:variable>
-	<xsl:if test="boolean($show.class)">
-	    <td><a href="{$class.href}"><xsl:value-of select="../@name"/></a></td>
-	</xsl:if>
-        <td>
-	    <a name="{@name}"/>
-	    <xsl:choose>
-		<xsl:when test="boolean($show.class)">
-		    <a href="{concat($class.href, '#', @name)}"><xsl:value-of select="@name"/></a>
-		</xsl:when>
-		<xsl:otherwise>
-		    <xsl:value-of select="@name"/>
-		</xsl:otherwise>
-	    </xsl:choose>
-	</td>
-        <xsl:choose>
-            <xsl:when test="failure">
-                <td>Failure</td>
-                <td><xsl:apply-templates select="failure"/></td>
-            </xsl:when>
-            <xsl:when test="error">
-                <td>Error</td>
-                <td><xsl:apply-templates select="error"/></td>
-            </xsl:when>
-            <xsl:otherwise>
-                <td>Success</td>
-                <td></td>
-            </xsl:otherwise>
-        </xsl:choose>
-        <td>
-            <xsl:call-template name="display-time">
-                <xsl:with-param name="value" select="@time"/>
-            </xsl:call-template>
-        </td>
-    </tr>
-</xsl:template>
-
 
 
 <!--
