@@ -401,9 +401,7 @@
     color: white;
     padding: 5px 7px;
     text-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
-}
-
-.testsuite.error header {
+    
     -moz-border-radius: 5px 5px 0 0;
     -webkit-border-radius: 5px 5px 0 0;    
     border-radius: 5px 5px 0 0;
@@ -411,7 +409,9 @@
     -moz-box-shadow: 0 0 13px rgba(255, 255, 255, 0.3) inset;
     -webkit-box-shadow: 0 0 13px rgba(255, 255, 255, 0.3) inset;
     box-shadow: 0 0 13px rgba(255, 255, 255, 0.3) inset;
-    
+}
+
+.testsuite.error header {
     background: -moz-linear-gradient(center top , #BE5959, #A94D36);
     background: -webkit-gradient(linear, left top, left bottom, from(#BE5959), to(#A94D36));
     background: linear-gradient(center top , #BE5959, #A94D36);
@@ -420,14 +420,6 @@
 }
 
 .testsuite.failure header {
-    -moz-border-radius: 5px 5px 0 0;
-    -webkit-border-radius: 5px 5px 0 0;    
-    border-radius: 5px 5px 0 0;
-    
-    -moz-box-shadow: 0 0 13px rgba(255, 255, 255, 0.3) inset;
-    -webkit-box-shadow: 0 0 13px rgba(255, 255, 255, 0.3) inset;
-    box-shadow: 0 0 13px rgba(255, 255, 255, 0.3) inset;
-    
     background: -moz-linear-gradient(center top , #EFB77E, #E69814);
     background: -webkit-gradient(linear, left top, left bottom, from(#EFB77E), to(#E69814));
     background: linear-gradient(center top , #EFB77E, #E69814);
@@ -436,14 +428,6 @@
 }
 
 .testsuite.success header {
-    -moz-border-radius: 5px 5px 0 0;
-    -webkit-border-radius: 5px 5px 0 0;
-    border-radius: 5px 5px 0 0;
-    
-    -moz-box-shadow: 0 0 13px rgba(255, 255, 255, 0.3) inset;
-    -webkit-box-shadow: 0 0 13px rgba(255, 255, 255, 0.3) inset;
-    box-shadow: 0 0 13px rgba(255, 255, 255, 0.3) inset;
-    
     background: -moz-linear-gradient(center top , #A6CC3B, #CBD53B);
     background: -webkit-gradient(linear, left top, left bottom, from(#A6CC3B), to(#CBD53B));
     background: linear-gradient(center top , #A6CC3B, #CBD53B);
@@ -451,6 +435,9 @@
     border-bottom: 1px solid #C4D5B6;
 }
 
+/* Link to individual test cases 
+ - - - - - - - - - - - - - - - - - */
+  
 .packagelink {
     border: 1px solid transparent;
     float: left;
