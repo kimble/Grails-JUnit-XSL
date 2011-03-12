@@ -77,7 +77,7 @@
     
     <xsl:for-each select="/testsuites/testsuite[@package = $name]">
 	    <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}.html">
-            <xsl:apply-templates select="." name="testsuite" mode="testsuite.page">
+            <xsl:apply-templates select="." mode="testsuite.page">
             </xsl:apply-templates>
 	    </redirect:write>
     </xsl:for-each>
@@ -258,7 +258,7 @@
                         
                         <xsl:attribute name="title"><xsl:value-of select="@tests" /> tests executed in <xsl:value-of select="@time" /> seconds.</xsl:attribute>             
 		            
-                        <span><xsl:attribute name="class"><xsl:value-of select="$cssclass" />icon</xsl:attribute></span>
+                        <span><xsl:attribute name="class">icon <xsl:value-of select="$cssclass" /></xsl:attribute></span>
                         <xsl:value-of select="@name" />
 		            </a>
 	            </li>
@@ -317,8 +317,8 @@
         
         <div class="metadata">
             <p>
-                <span class="failedicon">
-	               <xsl:attribute name="class"><xsl:value-of select="$cssclass" />icon</xsl:attribute>
+                <span>
+	               <xsl:attribute name="class">icon <xsl:value-of select="$cssclass" /></xsl:attribute>
 	            </span>
                 <b>
                     <xsl:attribute name="class">testname <xsl:value-of select="$cssclass" /></xsl:attribute>
@@ -616,26 +616,25 @@ pre {
     margin: 0 10px 5px 0;
     width: 63px;
 }
-.failureicon {
+
+/* icons 
+  - - - - */
+
+.icon {
+    width: 16px;
+    height: 16px;
+    margin: 6px 4px 0;
+    display: inline-block;
+}
+
+.icon.failure {
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAcpJREFUeNpi3FvPwoAHMEPpv+gSTg2/wTQTPs2MjMx/QBjJIAyAz4AKMS0/BjHtQDCbVAPkmNm4WxSdyhkUHYoYQGyQGCkG5MvbFDCwcfECMTeDvHUuSKyIWANs2Hkli6SNoxh+fzzK8PvDQQYZowgGTkGFfKCcKzEGZCo5VTMw/v/BcHxGGsPxWXkM//+9Y1ByLAPLETIgmV/WNEpMzY7h59uNcMGfr9cxCCsaMfDLmIBCNA2fAZnKTpUMf77fYPj/5xNC9O9Xhr/frjGouJQxAKN1JnK0IhtQLa7lZ8wjLMLw6+02BoY/H+ES//9+AbpiPQOXAD+DpEEYSKgRJscITYnSzGxcT0yS1jIw/TzJ8OfLJZAUSCsQ/WH4/x+Y6v79YmDmUmFg5g9kODUvnOHPj49KwNR4H+aCfDnzVAZWtr/AUD8EtPEzGJ9evY7h9JpNQC98Awbkd4Y/n88zMDF/Y5CzSAHrgbkAGG3ih03iFzD8fD4RaOEXoCgjkgv+Q7LCf0h2YGTiYuCUq2Y4sziZ4fv7Rz4s4GizLwTq+cbAIZnMQAz4/+8jg7JTGcOVtTmZIAOmX98CTupRDKSBrSC9jP/BTiQfAAQYAMjEmRhwR6odAAAAAElFTkSuQmCC");
-    display: inline-block;
-    height: 16px;
-    margin: 6px 4px 0;
-    width: 16px;
 }
-.erroricon {
+.icon.error {
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAcJJREFUeNqkUz1PAkEQfStggjESejU0GozlGqn8SGywkYIYY0IsaLCwIBTQUN5fMLGm8S8QSWwslVAYjAlUBEJDhCgWwp3nzN6eHqIVl8zN7rx5b+dm9oRt25jlmcOMj59f10JAkPcBcXIGWdECyqYn6TfGdZ9S9d4K4gQYx4WCtJzE+G/sKJudwpQABUGnGSf5vKzX60jmctL8SYzz+iCdls1mEzuplMIsLSC4iSUh1ClUlpHIZGStVkM0GsVNqVRlIJZIyG63i1AohMdKpUrZRQqXz4j7LWA7VSiR/WRSNhsNRRgOh+i02wgGg3hrtRSZelLmI6cExs7nKJGVtTX50uupMn0+H157PUWmZpYDXLoWUFPo6MC87jivx4MBFtxOWZYS11VipNdT98DWDVsPh2XQNLFIMdc4xpg9OZ3JMdIpRowSXVKt36+yuXvGxn+N0XS+3zj0kG+JSPEi261H5FCLmN9lUyNWyZ+Qag54eA6Hbfa8j1A88g+2qrlqCkKIZdovbAG7m8D5E3B5D9xR7IPsk/u7DextABd14OrBwd6J23YFligQ0IPwXE7lbedXUAPya5yHMiLuq5j1d/4SYAAj3NATBGE4PgAAAABJRU5ErkJggg==");
-    display: inline-block;
-    height: 16px;
-    margin: 6px 4px 0;
-    width: 16px;
 }
-.successicon {
+.icon.success {
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9sDCQsRAj8H3ssAAAIkSURBVDjLpZNPSFRRFMZ/971RpySdLOgvKmUxRKXZP9qIq3pQi0ih5xQUQiZBEbQVbPEg2gjuImgVwrSoRUQGQrYQDBKJmNKF1RQ6jE3O6Fg647y5p8W8RiWQwA8OBy73/PgO371KRFiPDNYpH4B6UAU+BQoQwBUoN8BUhVsKMBS2kagBngJd4fzWV2In1nCwqGHJK1cI6UTA1PTesdqPmhrnkvpp/fcKNjOlouk5bfmP/16co/NMW712cYorrKWQSio03fUnaN6Wbto5b0zn+t8NjYvm7ioHtkpaNskRWyUtoGA9I2iXzppqWoIVDbWZkin9OjI0kYzTG9ZbXhQBtqQs5eLcbr18RLk4tqQs7/xcxUZu7N9j7I3Nvmdw+OPneJS+sLv5ETlZjlG5ONdbLh6eWfhkdJy/0KBcnDaZu1nqo/tQI/vSv7RvfJxvPyZ5brjcIy8FhysAXQ8fP/mArloaXXhmtobqDiqXK3WNBFMuZdEvTCWiDIqmq49AYfJlppCwiKB6Kgnl0hbgnL3lPzAWy2zYsR1iMViMkoiPMqQN2sMllbMMZIvDIuIBLD9Um4RqFizROMEQwXkf5blJZhNvGNEGV8ODZVMMZFcltAxQ3ourNbFP5i21C6eyid3pt0zor1wLDxtjfNf/RLwSYACbgABQcayWU3XNdET6uR+ZJgJkgYzXs8ASkBMR+QtQQBng97rp/QrtletVfkXXRcB69AcDTAOk3AI32gAAAABJRU5ErkJggg==");
-    display: inline-block;
-    height: 16px;
-    margin: 6px 4px 0;
-    width: 16px;
 }
 
 
