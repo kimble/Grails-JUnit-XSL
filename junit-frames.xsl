@@ -77,8 +77,7 @@
     
     <xsl:for-each select="/testsuites/testsuite[@package = $name]">
 	    <redirect:write file="{$output.dir}/{$package.dir}/{@id}_{@name}.html">
-            <xsl:apply-templates select="." mode="testsuite.page">
-            </xsl:apply-templates>
+            <xsl:apply-templates select="." mode="testsuite.page" />
 	    </redirect:write>
     </xsl:for-each>
 </xsl:template>
@@ -114,7 +113,7 @@
 </html>
 </xsl:template>
 
-
+<!-- This will produce a large file containing all the test results -->
 <xsl:template name="all.html" match="testsuites" mode="all.tests">
 <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html></xsl:text>
 <html>
@@ -135,19 +134,20 @@
         <div id="report">
             <div class="grailslogo"></div>
         
-            <h1><xsl:value-of select="$TITLE"/></h1>
-        
-            <p class="intro">
-                Executed <xsl:value-of select="$testCount" /> tests, <xsl:value-of select="$errorCount" /> errors and <xsl:value-of select="$failureCount" /> failures.
-             
-            </p>
-            <br style="clear: both" />
+            <hgroup class="clearfix">
+	            <h1><xsl:value-of select="$TITLE"/></h1>
+	        
+	            <p class="intro">
+	                Executed <xsl:value-of select="$testCount" /> tests, 
+	                <xsl:value-of select="$errorCount" /> errors and 
+	                <xsl:value-of select="$failureCount" /> failures.
+	            </p>
+            </hgroup>
             
             <xsl:apply-templates select="testsuite" mode="summary">
                 <xsl:sort select="@errors + @failures" data-type="number" order="descending" />
                 <xsl:sort select="@name" />
             </xsl:apply-templates>
-        
         </div>
         
         <!-- maybe another day
@@ -161,6 +161,8 @@
 </html>
 </xsl:template>
 
+<!-- Produces a file with a package / test case summary 
+with links to more detailed per-test case reports. -->
 <xsl:template name="index.html" match="testsuites" mode="all.tests">
 <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html></xsl:text>
 <html>
@@ -189,15 +191,15 @@
 	            </p>
             </hgroup>
             
-            
             <xsl:for-each select="./testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
-		        <xsl:call-template name="packages.overview">
+                <xsl:variable name="errorCount" select="sum(testcase/@errors)" />
+                
+		        <xsl:call-template name="packages.overview">  
 		            <xsl:with-param name="packageName" select="@package"/>
 		        </xsl:call-template>
 		    </xsl:for-each>
-        
         </div>
-                    
+
     </body>
 </html>
 </xsl:template>
@@ -220,8 +222,6 @@
             <xsl:otherwise>success</xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
-    
-    <!-- sum(testsuite/@tests) -->
     
     <div>
         <xsl:attribute name="class">testsuite <xsl:value-of select="$cssclass" /></xsl:attribute>
@@ -590,7 +590,7 @@ pre {
     
     background-color: #FFFFFF;
     border: 1px solid #DEDEDE;
-    font-family: 'Monaco','Droid Sans Mono',monospace;
+    font-family: Consolas, Monaco, monospace;
     font-size: 0.9em;
 }
 
