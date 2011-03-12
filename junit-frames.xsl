@@ -84,6 +84,7 @@
 
 <!-- One file per test suite / class -->
 <xsl:template match="testsuite" name="testsuite" mode="testsuite.page">
+<xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html></xsl:text>
 <html>
     <head>
         <title><xsl:value-of select="@name"/></title>
@@ -108,6 +109,60 @@
                 <xsl:sort select="@name" />
             </xsl:apply-templates>
         </div>
+    
+        <script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+        <script language="javascript">
+        <![CDATA[
+            $(document).ready(function() {
+            
+                var addOutputToTest = function(header, name, output) {
+                    output = $.trim(output);
+                    if (output.length == 0) {
+                        return;
+                    }
+                
+                    $(".testname").each(function() {
+                        if (name == $(this).text()) {
+                            var testcase = $(this).parents(".testcase");
+                            var outputInfo = $(testcase).find(".outputinfo");
+                            $(outputInfo).append('<p><b class="message">' + header + '</b></p>');
+                            $(outputInfo).append('<pre>' + output + '</pre>');
+                        }
+                    });
+                }
+            
+                $(".output").find("pre").each(function() {
+                    var header = $(this).parent().hasClass("sysout") ? "Output to standard output" : "Output to system error"
+                
+                    var output = $(this).text().split("\n");
+                    var testName = null;
+                    var testOutput = "";
+                    for (var i=0; i < output.length; i++) {
+                        var line = output[i];
+                        var matches = line.match(/^--Output from (.*)--$/);
+                        if (matches !== null && matches.length == 2) {
+                            if (testName !== null && testOutput.length > 0) {
+                                addOutputToTest(header, testName, testOutput);
+                                testOutput = "";
+                            }
+                            
+                            testName = matches[1];
+                        } else {
+                            if (testName !== null) {
+                                testOutput += line + "\n";
+                            }
+                        }
+                    }
+                    
+                    if (testName !== null && testOutput.length > 0) {
+                        addOutputToTest(header, testName, testOutput);
+                        testOutput = "";
+                    }
+                });
+                
+            });
+        ]]>
+        </script>
     
     </body>
 </html>
@@ -381,7 +436,7 @@ with links to more detailed per-test case reports. -->
     box-shadow: 0 0 4px #F8F8F8;
     
     background: -moz-linear-gradient(center top , #F7F7F7, #FEFEFE);
-    background: -webkit-linear-gradient(center top , #F7F7F7, #FEFEFE);
+    background: -webkit-gradient(linear, left top, left bottom, from(#F7F7F7), to(#FEFEFE));
     background: linear-gradient(center top , #F7F7F7, #FEFEFE);
     
     border: 1px solid #EEEEEE;
@@ -515,7 +570,10 @@ with links to more detailed per-test case reports. -->
     font-weight: bold;
 }
 
-
+/* output is parsed using javascript */
+.testsuite footer {
+    display: none;
+}
 
 p {
     padding: 4px;
@@ -524,6 +582,10 @@ p {
 .testcase .outputinfo {
     float: left;
     width: 69%;
+}
+
+.outputinfo p {
+    margin-top: 9px;
 }
 
 footer.output {
