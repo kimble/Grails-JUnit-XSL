@@ -32,7 +32,7 @@
 
 -->
 <xsl:param name="output.dir" select="'.'"/>
-<xsl:param name="TITLE">Unit Test Results.</xsl:param>
+<xsl:param name="TITLE">Unit Test Results</xsl:param>
 
 
 <xsl:template match="testsuites">
@@ -40,6 +40,12 @@
     <!-- create the all.html -->
     <redirect:write file="{$output.dir}/all.html">
         <xsl:call-template name="all.html"/>
+    </redirect:write>
+    
+    <!-- create the failed.html this will include
+         tests with errors as well as failures -->
+    <redirect:write file="{$output.dir}/failed.html">
+        <xsl:call-template name="failed.html"/>
     </redirect:write>
 
     <!-- create the overview.html -->
@@ -100,6 +106,10 @@
     <body>
     
         <div id="report">
+            <xsl:call-template name="navigation.links">
+                <xsl:with-param name="package.name" select="@package" />
+            </xsl:call-template>
+        
             <hgroup>
 	            <xsl:call-template name="create.logo.link">
 		            <xsl:with-param name="package.name" select="@package" />
@@ -121,79 +131,26 @@
 </html>
 </xsl:template>
 
-<xsl:template name="output.parser.js">
-<xsl:comment>Parses JUnit output and associates it with the corresponding test case</xsl:comment>
-<script language="javascript">
-<![CDATA[
-    $(document).ready(function() {
-    
-        var addOutputToTest = function(header, name, output) {
-            output = $.trim(output);
-            if (output.length == 0) {
-                return;
-            }
-        
-            $(".testname").each(function() {
-                if (name == $(this).text()) {
-                    var testcase = $(this).parents(".testcase");
-                    var outputInfo = $(testcase).find(".outputinfo");
-                    $(outputInfo).append('<p><b class="message">' + header + '</b></p>');
-                    $(outputInfo).append('<pre>' + output + '</pre>');
-                }
-            });
-        }
-    
-        $(".output").find("pre").each(function() {
-            var header = $(this).parent().hasClass("sysout") ? "Output to standard out" : "Output to system error"
-        
-            var output = $(this).text().split("\n");
-            var testName = null;
-            var testOutput = "";
-            for (var i=0; i < output.length; i++) {
-                var line = output[i];
-                var matches = line.match(/^--Output from (.*)--$/);
-                if (matches !== null && matches.length == 2) {
-                    if (testName !== null && testOutput.length > 0) {
-                        addOutputToTest(header, testName, testOutput);
-                        testOutput = "";
-                    }
-                    
-                    testName = matches[1];
-                } else {
-                    if (testName !== null) {
-                        testOutput += line + "\n";
-                    }
-                }
-            }
-            
-            if (testName !== null && testOutput.length > 0) {
-                addOutputToTest(header, testName, testOutput);
-                testOutput = "";
-            }
-        });
-        
-    });
-]]>
-</script>
-</xsl:template>
 
-
-<!-- This will produce a large file containing all the test results -->
-<xsl:template name="all.html" match="testsuites" mode="all.tests">
+<!-- This will produce a large file containing failed (including errors) tests -->
+<xsl:template name="failed.html" match="testsuites" mode="all.tests">
 <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html></xsl:text>
 <html>
     <head>
-        <title><xsl:value-of select="$TITLE"/></title>
+        <title><xsl:value-of select="$TITLE"/> - Failed tests</title>
         <link href="boilerplate.css" rel="stylesheet" type="text/css" />        
         <link href="stylesheet.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
     
         <div id="report">
+            <xsl:call-template name="navigation.links">
+                <xsl:with-param name="package.name" select="''" />
+            </xsl:call-template>
+            
             <div class="grailslogo"></div>
-        
             <hgroup class="clearfix">
-	            <h1><xsl:value-of select="$TITLE"/></h1>
+	            <h1><xsl:value-of select="$TITLE"/> - Failed tests</h1>
 	        
 	            <p class="intro">
 	                <xsl:call-template name="test.count.summary">
@@ -204,11 +161,56 @@
 	            </p>
             </hgroup>
             
+            <xsl:apply-templates select="testsuite[@errors &gt; 0 or @failures &gt; 0]" mode="summary">
+                <xsl:sort select="@errors + @failures" data-type="number" order="descending" />
+                <xsl:sort select="@name" />
+            </xsl:apply-templates>
+        </div>
+        
+        <script language="javascript" src="jquery.js"></script>
+        <xsl:call-template name="output.parser.js" />
+        
+    </body>
+</html>
+</xsl:template>
+
+<xsl:template name="all.html" match="testsuites" mode="all.tests">
+<xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html></xsl:text>
+<html>
+    <head>
+        <title><xsl:value-of select="$TITLE"/> - All tests</title>
+        <link href="boilerplate.css" rel="stylesheet" type="text/css" />        
+        <link href="stylesheet.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+    
+        <div id="report">
+            <xsl:call-template name="navigation.links">
+                <xsl:with-param name="package.name" select="''" />
+            </xsl:call-template>
+            
+            <div class="grailslogo"></div>
+        
+            <hgroup class="clearfix">
+                <h1><xsl:value-of select="$TITLE"/> - All tests</h1>
+            
+                <p class="intro">
+                    <xsl:call-template name="test.count.summary">
+                       <xsl:with-param name="tests" select="sum(testsuite/@tests)" />
+                       <xsl:with-param name="errors" select="sum(testsuite/@errors)" />
+                       <xsl:with-param name="failures" select="sum(testsuite/@failures)" />
+                    </xsl:call-template>
+                </p>
+            </hgroup>
+            
             <xsl:apply-templates select="testsuite" mode="summary">
                 <xsl:sort select="@errors + @failures" data-type="number" order="descending" />
                 <xsl:sort select="@name" />
             </xsl:apply-templates>
         </div>
+        
+        <script language="javascript" src="jquery.js"></script>
+        <xsl:call-template name="output.parser.js" />
         
     </body>
 </html>
@@ -221,17 +223,21 @@ with links to more detailed per-test case reports. -->
 <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html></xsl:text>
 <html>
     <head>
-        <title><xsl:value-of select="$TITLE"/></title>
+        <title><xsl:value-of select="$TITLE"/> - Package summary</title>
         <link href="boilerplate.css" rel="stylesheet" type="text/css" />        
         <link href="stylesheet.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
 
         <div id="report">
+            <xsl:call-template name="navigation.links">
+                <xsl:with-param name="package.name" select="''" />
+            </xsl:call-template>
+            
             <div class="grailslogo"></div>
         
             <hgroup class="clearfix">
-	            <h1><xsl:value-of select="$TITLE"/></h1>
+	            <h1><xsl:value-of select="$TITLE"/> - Summary</h1>
 	        
 	            <p class="intro">
 	                <xsl:call-template name="test.count.summary">
@@ -510,6 +516,31 @@ with links to more detailed per-test case reports. -->
     padding: 10px 15px;
     width: 70%;
 }
+
+/* Navigation links between the various views
+   - - - - - - - - - - - - - - - - - - - - - - */
+#navigationlinks {
+    width: 300px;
+    float: right;
+    text-align: right;    
+}
+
+#navigationlinks p {
+    padding: 2px;
+}
+
+#navigationlinks a {
+    font-family: Verdana, inherit;
+    font-size: 1.1em;
+    color: #464F38;
+}
+
+#navigationlinks a:hover {
+    color: #333;
+}
+   
+/* Test suites
+   - - - - - - */
 
 .testsuite {
     -moz-border-radius: 5px;
@@ -817,6 +848,21 @@ pre {
     <a title="Home"><xsl:attribute name="href"><xsl:if test="not($package.name = 'unnamed package')"><xsl:call-template name="path"><xsl:with-param name="path" select="$package.name"/></xsl:call-template></xsl:if>index.html</xsl:attribute><div class="grailslogo"></div></a>
 </xsl:template>
 
+<!-- create the links for the various views -->
+<xsl:template name="navigation.links">
+    <xsl:param name="package.name"/>
+    <nav id="navigationlinks">
+        <p>
+            <a><xsl:attribute name="href"><xsl:if test="not($package.name = 'unnamed package')"><xsl:call-template name="path"><xsl:with-param name="path" select="$package.name"/></xsl:call-template></xsl:if>failed.html</xsl:attribute>Tests with failure and errors</a>
+        </p>
+        <p>
+            <a><xsl:attribute name="href"><xsl:if test="not($package.name = 'unnamed package')"><xsl:call-template name="path"><xsl:with-param name="path" select="$package.name"/></xsl:call-template></xsl:if>index.html</xsl:attribute>Package summary</a>
+        </p>
+	    <p>
+	        <a><xsl:attribute name="href"><xsl:if test="not($package.name = 'unnamed package')"><xsl:call-template name="path"><xsl:with-param name="path" select="$package.name"/></xsl:call-template></xsl:if>all.html</xsl:attribute>Show all tests</a>
+	    </p>
+    </nav>
+</xsl:template>
 
 <!--
     template that will convert a carriage return into a br tag
@@ -838,6 +884,61 @@ pre {
 </xsl:template>
 
 
+<xsl:template name="output.parser.js">
+<xsl:comment>Parses JUnit output and associates it with the corresponding test case</xsl:comment>
+<script language="javascript">
+<![CDATA[
+    $(document).ready(function() {
+    
+        var addOutputToTest = function(header, name, output) {
+            output = $.trim(output);
+            if (output.length == 0) {
+                return;
+            }
+        
+            $(".testname").each(function() {
+                if (name == $(this).text()) {
+                    var testcase = $(this).parents(".testcase");
+                    var outputInfo = $(testcase).find(".outputinfo");
+                    $(outputInfo).append('<p><b class="message">' + header + '</b></p>');
+                    $(outputInfo).append('<pre>' + output + '</pre>');
+                }
+            });
+        }
+    
+        $(".output").find("pre").each(function() {
+            var header = $(this).parent().hasClass("sysout") ? "Output to standard out" : "Output to system error"
+        
+            var output = $(this).text().split("\n");
+            var testName = null;
+            var testOutput = "";
+            for (var i=0; i < output.length; i++) {
+                var line = output[i];
+                var matches = line.match(/^--Output from (.*)--$/);
+                if (matches !== null && matches.length == 2) {
+                    if (testName !== null && testOutput.length > 0) {
+                        addOutputToTest(header, testName, testOutput);
+                        testOutput = "";
+                    }
+                    
+                    testName = matches[1];
+                } else {
+                    if (testName !== null) {
+                        testOutput += line + "\n";
+                    }
+                }
+            }
+            
+            if (testName !== null && testOutput.length > 0) {
+                addOutputToTest(header, testName, testOutput);
+                testOutput = "";
+            }
+        });
+        
+    });
+]]>
+</script>
+</xsl:template>
 
 
 <!-- HTML5 ✰ Boilerplate -->
@@ -905,9 +1006,9 @@ input:valid, textarea:valid   {  }
 input:invalid, textarea:invalid { border-radius: 1px; -moz-box-shadow: 0px 0px 5px red; -webkit-box-shadow: 0px 0px 5px red; box-shadow: 0px 0px 5px red; }
 .no-boxshadow input:invalid, .no-boxshadow textarea:invalid { background-color: #f0dddd; }
 
-::-moz-selection{ background: #FF5E99; color:#fff; text-shadow: none; }
-::selection { background:#FF5E99; color:#fff; text-shadow: none; }
-a:link { -webkit-tap-highlight-color: #FF5E99; }
+::-moz-selection{ background: #FF9800; color:#fff; text-shadow: none; }
+::selection { background: #FF9800; color:#fff; text-shadow: none; }
+a:link { -webkit-tap-highlight-color: #FF9800; }
 
 button {  width: auto; overflow: visible; }
 .ie7 img { -ms-interpolation-mode: bicubic; }
