@@ -132,7 +132,7 @@
                 }
             
                 $(".output").find("pre").each(function() {
-                    var header = $(this).parent().hasClass("sysout") ? "Output to standard output" : "Output to system error"
+                    var header = $(this).parent().hasClass("sysout") ? "Output to standard out" : "Output to system error"
                 
                     var output = $(this).text().split("\n");
                     var testName = null;
@@ -247,7 +247,8 @@ with links to more detailed per-test case reports. -->
             </hgroup>
             
             <xsl:for-each select="./testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
-                <xsl:variable name="errorCount" select="sum(testcase/@errors)" />
+                <xsl:sort select="@errors + @failures" data-type="number" order="descending" />
+                <xsl:sort select="../@name" />
                 
 		        <xsl:call-template name="packages.overview">  
 		            <xsl:with-param name="packageName" select="@package"/>
@@ -293,6 +294,8 @@ with links to more detailed per-test case reports. -->
 	    
 	    <ul class="clearfix">
             <xsl:for-each select="/testsuites/testsuite[@package = $packageName]">
+                <xsl:sort select="@name" />
+                    
                 <xsl:variable name="testcaseCssClass">
 	                <xsl:choose>
 	                    <xsl:when test="count(testcase/error) &gt; 0">error</xsl:when>
