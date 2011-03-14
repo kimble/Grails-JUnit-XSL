@@ -189,13 +189,6 @@
     </head>
     <body>
     
-        <xsl:variable name="testCount" select="sum(testsuite/@tests)"/>
-        <xsl:variable name="errorCount" select="sum(testsuite/@errors)"/>
-        <xsl:variable name="failureCount" select="sum(testsuite/@failures)"/>
-        <xsl:variable name="timeCount" select="sum(testsuite/@time)"/>
-        <xsl:variable name="successRate" select="($testCount - $failureCount - $errorCount) div $testCount"/>
-        <xsl:variable name="successCount" select="($testCount - $failureCount - $errorCount)"/>            
-    
         <div id="report">
             <div class="grailslogo"></div>
         
@@ -203,9 +196,11 @@
 	            <h1><xsl:value-of select="$TITLE"/></h1>
 	        
 	            <p class="intro">
-	                Executed <xsl:value-of select="$testCount" /> tests, 
-	                <xsl:value-of select="$errorCount" /> errors and 
-	                <xsl:value-of select="$failureCount" /> failures.
+	                <xsl:call-template name="test.count.summary">
+	                   <xsl:with-param name="tests" select="sum(testsuite/@tests)" />
+	                   <xsl:with-param name="errors" select="sum(testsuite/@errors)" />
+	                   <xsl:with-param name="failures" select="sum(testsuite/@failures)" />
+	                </xsl:call-template>
 	            </p>
             </hgroup>
             
@@ -215,16 +210,10 @@
             </xsl:apply-templates>
         </div>
         
-        <!-- maybe another day
-        <script language="javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
-        <script language="javascript">
-            $(document).ready(function() {
-            });
-        </script>  -->
-            
     </body>
 </html>
 </xsl:template>
+
 
 <!-- Produces a file with a package / test case summary 
 with links to more detailed per-test case reports. -->
@@ -237,14 +226,7 @@ with links to more detailed per-test case reports. -->
         <link href="stylesheet.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-    
-        <xsl:variable name="testCount" select="sum(testsuite/@tests)"/>
-        <xsl:variable name="errorCount" select="sum(testsuite/@errors)"/>
-        <xsl:variable name="failureCount" select="sum(testsuite/@failures)"/>
-        <xsl:variable name="timeCount" select="sum(testsuite/@time)"/>
-        <xsl:variable name="successRate" select="($testCount - $failureCount - $errorCount) div $testCount"/>
-        <xsl:variable name="successCount" select="($testCount - $failureCount - $errorCount)"/>            
-    
+
         <div id="report">
             <div class="grailslogo"></div>
         
@@ -252,7 +234,11 @@ with links to more detailed per-test case reports. -->
 	            <h1><xsl:value-of select="$TITLE"/></h1>
 	        
 	            <p class="intro">
-	                Executed <xsl:value-of select="$testCount" /> tests, <xsl:value-of select="$errorCount" /> errors and <xsl:value-of select="$failureCount" /> failures.
+	                <xsl:call-template name="test.count.summary">
+                       <xsl:with-param name="tests" select="sum(testsuite/@tests)" />
+                       <xsl:with-param name="errors" select="sum(testsuite/@errors)" />
+                       <xsl:with-param name="failures" select="sum(testsuite/@failures)" />
+                    </xsl:call-template>
 	            </p>
             </hgroup>
             
@@ -295,10 +281,11 @@ with links to more detailed per-test case reports. -->
 	    <header>
             <h2><xsl:value-of select="$packageName" /></h2>
             <h3>
-                Tests: <xsl:value-of select="$testCount" />, 
-                errors: <xsl:value-of select="$errorCount" />,
-                failures: <xsl:value-of select="$failureCount" />.
-                Executed in <xsl:value-of select="$sumTime" /> seconds.
+                <xsl:call-template name="test.count.summary">
+                   <xsl:with-param name="tests" select="$testCount" />
+                   <xsl:with-param name="errors" select="$errorCount" />
+                   <xsl:with-param name="failures" select="$failureCount" />
+                </xsl:call-template>
             </h3>
         </header>
 	    
@@ -353,7 +340,13 @@ with links to more detailed per-test case reports. -->
         
         <header>
             <h2><xsl:value-of select="@name" /></h2>
-            <h3>Executed in <xsl:value-of select="@time" /> sec, <xsl:value-of select="@errors" /> errors, <xsl:value-of select="@failures" /> failures and <xsl:value-of select="@tests - @errors - @failures" /> successes.</h3>
+            <h3>
+                <xsl:call-template name="test.count.summary">
+                   <xsl:with-param name="tests" select="@tests" />
+                   <xsl:with-param name="errors" select="@errors" />
+                   <xsl:with-param name="failures" select="@failures" />
+                </xsl:call-template>
+            </h3>
         </header>
         
         <xsl:apply-templates select="testcase" mode="tableline">
@@ -412,6 +405,85 @@ with links to more detailed per-test case reports. -->
 	    <p><b class="message"><xsl:value-of select="@message" /></b></p>
 	    <pre><xsl:value-of select="." /></pre>
     </div>
+</xsl:template>
+
+
+<!-- Test count summary, the number of 
+     executed tests, errors and failures -->
+<xsl:template name="test.count.summary">
+    <xsl:param name="tests" />
+    <xsl:param name="errors" />
+    <xsl:param name="failures" />
+    
+    <xsl:choose>
+        <xsl:when test="$tests = 0">
+            No tests executed. 
+        </xsl:when>
+        <xsl:otherwise>
+        
+            <!-- Test count -->
+            <xsl:choose>
+                <xsl:when test="$tests = 1">
+                    A single test executed  
+                </xsl:when>
+                <xsl:otherwise>
+                    Executed <xsl:value-of select="$tests" /> tests   
+                </xsl:otherwise>
+            </xsl:choose>
+            
+            <!-- Error / failure count -->
+            <xsl:choose>
+               <xsl:when test="$errors = 0 and $failures = 0">
+                   without a single error or failure!
+               </xsl:when>
+               <xsl:when test="$errors &gt; 0 and $failures = 0">
+                   with 
+                   <xsl:call-template name="plural.singular">
+                       <xsl:with-param name="number" select="$errors" />
+                       <xsl:with-param name="word" select="'error'" />
+                   </xsl:call-template>.
+               </xsl:when>
+               <xsl:when test="$errors = 0 and $failures &gt; 0">
+                   with 
+                   <xsl:call-template name="plural.singular">
+                       <xsl:with-param name="number" select="$failures" />
+                       <xsl:with-param name="word" select="'failure'" />
+                   </xsl:call-template>.
+               </xsl:when>
+               <xsl:otherwise>
+                   with 
+                   <xsl:call-template name="plural.singular">
+                       <xsl:with-param name="number" select="$errors" />
+                       <xsl:with-param name="word" select="'error'" />
+                   </xsl:call-template>
+                   
+                   and 
+                   <xsl:call-template name="plural.singular">
+                       <xsl:with-param name="number" select="$failures" />
+                       <xsl:with-param name="word" select="'failure'" />
+                   </xsl:call-template>.
+               </xsl:otherwise>
+            </xsl:choose>
+            
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
+<xsl:template name="plural.singular">
+    <xsl:param name="number" />
+    <xsl:param name="word" />
+    
+    <xsl:choose>
+        <xsl:when test="$number = 0">
+            zero <xsl:value-of select="$word" />s
+        </xsl:when>
+        <xsl:when test="$number = 1">
+            one <xsl:value-of select="$word" />
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:value-of select="$number" /> <xsl:value-of select="$word" />s 
+        </xsl:otherwise>
+    </xsl:choose>
 </xsl:template>
 
 <!-- this is the stylesheet css to use for nearly everything -->
