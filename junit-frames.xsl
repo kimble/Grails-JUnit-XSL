@@ -386,7 +386,7 @@ with links to more detailed per-test case reports. -->
                 </b>
             </p>
                 
-            <p>Executed in <xsl:value-of select="@time" /> seconds.</p>           
+            <p class="summary">Executed in <xsl:value-of select="@time" /> seconds.</p>           
         </div>
         
         
@@ -452,6 +452,7 @@ with links to more detailed per-test case reports. -->
     color: white;
     padding: 5px 7px;
     text-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    font-size: 1.3em;
     
     -moz-border-radius: 5px 5px 0 0;
     -webkit-border-radius: 5px 5px 0 0;    
@@ -486,6 +487,27 @@ with links to more detailed per-test case reports. -->
     border-bottom: 1px solid #C4D5B6;
 }
 
+.testsuite header h2, h3 {
+    margin: 0;
+    padding: 0;
+}
+
+.testsuite header h3 {
+    font-size: 0.8em;
+}
+
+.testsuite .name {
+    width: 50%;
+}
+
+.testsuite .time {
+    width: 10%;
+}
+
+.testsuite .testcase {
+    padding: 5px 0;
+}
+
 /* Link to individual test cases 
  - - - - - - - - - - - - - - - - - */
   
@@ -494,7 +516,7 @@ with links to more detailed per-test case reports. -->
     float: left;
     font-size: 1.1em;
     list-style: none outside none;
-    padding: 2px 7px;
+    padding: 2px 7px 4px 7px;
     margin: 3px;
 }
 
@@ -524,30 +546,7 @@ with links to more detailed per-test case reports. -->
     color: #344804 !important;
 }
 
-.testsuite header {
-    font-size: 1.3em;
-}
 
-.testsuite header h2, h3 {
-    margin: 0;
-    padding: 0;
-}
-
-.testsuite header h3 {
-    font-size: 0.8em;
-}
-
-.testsuite .name {
-    width: 50%;
-}
-
-.testsuite .time {
-    width: 10%;
-}
-
-.testsuite .testcase {
-    padding: 5px 0;
-}
 
 .testcase.error .message {
     color: #AA0E0E;
@@ -573,13 +572,10 @@ with links to more detailed per-test case reports. -->
     font-weight: bold;
 }
 
-/* output is parsed using javascript */
-.testsuite footer {
-    display: none;
-}
-
-p {
-    padding: 4px;
+.testcase p.summary {
+    margin-left: 5px;
+    font-size: 1em;
+    color: #444;
 }
 
 .testcase .outputinfo {
@@ -589,6 +585,18 @@ p {
 
 .outputinfo p {
     margin-top: 9px;
+}
+
+/* output is parsed using javascript and not visible by default. 
+   I don't think that having a non-javascript fallback is important
+   as most Grails developers won't be using IE 6 :D */
+
+.testsuite footer {
+    display: none;
+}
+
+p {
+    padding: 4px;
 }
 
 footer.output {
@@ -632,6 +640,7 @@ body {
     color: #333333;
     font: 85% helvetica,sans-serif;
 }
+
 p.intro {
     font-size: 1.5em;
 }
@@ -653,6 +662,7 @@ pre {
     -webkit-border-radius: 5px;
     border-radius: 5px;
     
+    margin-bottom: 8px;
     background-color: #FFFFFF;
     border: 1px solid #DEDEDE;
     font-family: Consolas, Monaco, monospace;
