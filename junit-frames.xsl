@@ -534,18 +534,13 @@
 
         <xsl:choose>
             <xsl:when test="$number = 0">
-                zero
-                <xsl:value-of select="$word" />
-                s
+                zero <xsl:value-of select="$word" />s
             </xsl:when>
             <xsl:when test="$number = 1">
-                one
-                <xsl:value-of select="$word" />
+                one <xsl:value-of select="$word" />
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="$number" />
-                <xsl:value-of select="$word" />
-                s
+                <xsl:value-of select="$number" /> <xsl:value-of select="$word" />s
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -553,14 +548,8 @@
     <!-- this is the stylesheet css to use for nearly everything -->
     <xsl:template name="stylesheet.css">
         <![CDATA[
-        /*@font-face {
-        font-family: 'Droid Sans Mono';
-        font-style: normal;
-        font-weight: normal;
-        src: local('Droid Sans Mono'), local('DroidSansMono'), url('http://themes.googleusercontent.com/font?kit=ns-m2xQYezAtqh7ai59hJYW_AySPyikQrZReizgrnuw') format('truetype');
-        }*/
-
         #report {
+            -o-border-radius: 8px;
             -moz-border-radius: 8px;
             -webkit-border-radius: 8px;
             border-radius: 8px;
@@ -595,7 +584,6 @@
         }
 
         #navigationlinks a {
-            font-family: Verdana, inherit;
             font-size: 1.1em;
             color: #464F38;
         }
@@ -642,14 +630,16 @@
         }
 
         .testsuite.error header {
-            background: -moz-linear-gradient(center top , #BE5959, #A94D36);
-            background: -webkit-gradient(linear, left top, left bottom, from(#BE5959), to(#A94D36));
-            background: linear-gradient(center top , #BE5959, #A94D36);
+            background-color: #BC2F2F;
+            background: -moz-linear-gradient(center top , #BC2F2F, #C96952);
+            background: -webkit-gradient(linear, left top, left bottom, from(#BC2F2F), to(#C96952));
+            background: linear-gradient(center top , #BC2F2F, #C96952);
     
             border-bottom: 1px solid #BE5B5B;
         }
 
         .testsuite.failure header {
+            background-color: #EFB77E;
             background: -moz-linear-gradient(center top , #EFB77E, #E69814);
             background: -webkit-gradient(linear, left top, left bottom, from(#EFB77E), to(#E69814));
             background: linear-gradient(center top , #EFB77E, #E69814);
@@ -658,6 +648,7 @@
         }
 
         .testsuite.success header {
+            background-color: #A6CC3B;
             background: -moz-linear-gradient(center top , #A6CC3B, #CBD53B);
             background: -webkit-gradient(linear, left top, left bottom, from(#A6CC3B), to(#CBD53B));
             background: linear-gradient(center top , #A6CC3B, #CBD53B);
@@ -712,12 +703,10 @@
 
         .packagelink.failure a {
             color: #FB6C00 !important;
-            font-weight: bold;
         }
 
         .packagelink.error a {
             color: #DD0707 !important;
-            font-weight: bold;
         }
 
         .packagelink.success a {
@@ -818,7 +807,7 @@
         body {
             background-color: #F8F8F8;
             color: #333333;
-            font: 85% helvetica,sans-serif;
+            font: 85% ubuntu,helvetica,sans-serif;
         }
 
         p.intro {
