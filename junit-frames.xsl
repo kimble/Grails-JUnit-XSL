@@ -403,7 +403,7 @@
             </footer>
         </div>
     </xsl:template>
-
+    
     <!-- Test method -->
     <xsl:template match="testcase" mode="tableline">
         <xsl:variable name="cssclass">
@@ -849,9 +849,7 @@
 
         ]]>
     </xsl:template>
-
-
-
+    
 
     <!-- transform string like a.b.c to ../../../ @param path the path to transform into a descending directory path -->
     <xsl:template name="path">
@@ -955,15 +953,18 @@
                     var testcase = $(this).parents(".testcase");
                     var outputInfo = $(testcase).find(".outputinfo");
                     $(outputInfo).append('<p><b class="message">' + header + '</b></p>');
-                    $(outputInfo).append('<pre>' + output + '</pre>');
+                    
+                    var preNode = document.createElement("pre");
+                    preNode.append(document.createTextNode(output));
+                    $(outputInfo).append(preNode);
                 }
             });
         }
     
         $(".output").find("pre").each(function() {
             var header = $(this).parent().hasClass("sysout") ? "Output to standard out" : "Output to system error"
-        
             var output = $(this).text().split("\n");
+            
             var testName = null;
             var testOutput = "";
             for (var i=0; i < output.length; i++) {
@@ -1099,7 +1100,8 @@
         .clearfix { zoom: 1; }
     </xsl:template>
 
-    <!-- Embedding jquery seems to make the xsl too large in some cases -->
+    <!-- Embedding jquery seems to make the xsl too large in some cases,
+    this is a stripped down version of jQuery (without ajax support and so on) -->
     <xsl:template name="jquery.js">
         <xsl:text disable-output-escaping='yes'>
 <![CDATA[
