@@ -75,7 +75,7 @@
         <html>
             <head>
                 <title>
-                    <xsl:value-of select="@name" />
+                    Test - <xsl:value-of select="@name" />
                 </title>
                 <xsl:call-template name="create.resource.links">
                     <xsl:with-param name="package.name" select="@package" />
@@ -83,29 +83,33 @@
             </head>
             <body>
 
-                <div id="report">
-                    <xsl:call-template name="navigation.links">
-                        <xsl:with-param name="package.name" select="@package" />
-                    </xsl:call-template>
-
-                    <hgroup>
+                <div class="container container_8" id="report">
+                    
+                    <!-- The Grails logo and page header-->
+                    <div class="grid_6">
                         <xsl:call-template name="create.logo.link">
                             <xsl:with-param name="package.name" select="@package" />
                         </xsl:call-template>
+                        
+                        <h1><xsl:value-of select="@name" /></h1>
+                        <h2>Package: <xsl:value-of select="@package" /></h2>
+                    </div>
+                    
+                    <!-- The navigation links in the upper right corner -->
+                    <div class="grid_2">
+                        <xsl:call-template name="navigation.links">
+	                        <xsl:with-param name="package.name" select="@package" />
+	                    </xsl:call-template>
+                    </div>
 
-                        <h1>
-                            <xsl:value-of select="@name" />
-                        </h1>
-                        <h2>
-                            Package:
-                            <xsl:value-of select="@package" />
-                        </h2>
-                    </hgroup>
-
+                    <div class="clear"></div>
+                    
                     <xsl:apply-templates select="." mode="summary">
-                        <xsl:sort select="@errors + @failures" data-type="number" order="descending" />
-                        <xsl:sort select="@name" />
+                            <xsl:sort select="@errors + @failures" data-type="number" order="descending" />
+                            <xsl:sort select="@name" />
                     </xsl:apply-templates>
+                    
+                    <div class="clear"></div>	                    
                 </div>
 
                 <xsl:call-template name="output.parser.js" />
@@ -120,26 +124,16 @@
         <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html></xsl:text>
         <html>
             <head>
-                <title>
-                    <xsl:value-of select="$TITLE" />
-                    - Failed tests
-                </title>
+                <title><xsl:value-of select="$TITLE" /> - Failed tests</title>
                 <link href="boilerplate.css" rel="stylesheet" type="text/css" />
                 <link href="stylesheet.css" rel="stylesheet" type="text/css" />
             </head>
             <body>
 
-                <div id="report">
-                    <xsl:call-template name="navigation.links">
-                        <xsl:with-param name="package.name" select="''" />
-                    </xsl:call-template>
-
-                    <div class="grailslogo"></div>
-                    <hgroup class="clearfix">
-                        <h1>
-                            <xsl:value-of select="$TITLE" />
-                            - Failed tests
-                        </h1>
+                <div id="report" class="container container_8">
+                    <div class="grid_6 alpha">
+                        <div class="grailslogo"></div>
+                        <h1><xsl:value-of select="$TITLE" /> - Failed tests</h1>
 
                         <p class="intro">
                             <xsl:call-template name="test.count.summary">
@@ -148,12 +142,23 @@
                                 <xsl:with-param name="failures" select="sum(testsuite/@failures)" />
                             </xsl:call-template>
                         </p>
-                    </hgroup>
+                    </div>
+                                        
+                    <!-- Page navigation links -->
+                    <div class="grid_2 omega">
+                        <xsl:call-template name="navigation.links">
+	                        <xsl:with-param name="package.name" select="''" />
+	                    </xsl:call-template>
+                    </div>
+
+                    <div class="clear"></div>
 
                     <xsl:apply-templates select="testsuite[@errors &gt; 0 or @failures &gt; 0]" mode="summary">
                         <xsl:sort select="@errors + @failures" data-type="number" order="descending" />
                         <xsl:sort select="@name" />
                     </xsl:apply-templates>
+                    
+                    <div class="clear"></div>
                 </div>
 
                 <xsl:call-template name="output.parser.js" />
@@ -165,27 +170,19 @@
         <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html></xsl:text>
         <html>
             <head>
-                <title>
-                    <xsl:value-of select="$TITLE" />
-                    - All tests
-                </title>
+                <title><xsl:value-of select="$TITLE" /> - All tests</title>
                 <link href="boilerplate.css" rel="stylesheet" type="text/css" />
                 <link href="stylesheet.css" rel="stylesheet" type="text/css" />
             </head>
             <body>
 
-                <div id="report">
-                    <xsl:call-template name="navigation.links">
-                        <xsl:with-param name="package.name" select="''" />
-                    </xsl:call-template>
-
-                    <div class="grailslogo"></div>
-
-                    <hgroup class="clearfix">
-                        <h1>
-                            <xsl:value-of select="$TITLE" />
-                            - All tests
-                        </h1>
+                <div id="report" class="container container_8">
+                    
+                    <!-- Logo and page header -->
+                    <div class="grid_6 alpha">
+                        <div class="grailslogo"></div>
+                        
+                        <h1><xsl:value-of select="$TITLE" /> - All tests </h1>
 
                         <p class="intro">
                             <xsl:call-template name="test.count.summary">
@@ -194,12 +191,23 @@
                                 <xsl:with-param name="failures" select="sum(testsuite/@failures)" />
                             </xsl:call-template>
                         </p>
-                    </hgroup>
+                    </div>
+                    
+                    <!-- Page navigation links -->
+                    <div class="grid_2 omega">
+	                    <xsl:call-template name="navigation.links">
+	                        <xsl:with-param name="package.name" select="''" />
+	                    </xsl:call-template>
+                    </div>
+                    
+                    <div class="clear"></div>
 
                     <xsl:apply-templates select="testsuite" mode="summary">
                         <xsl:sort select="@errors + @failures" data-type="number" order="descending" />
                         <xsl:sort select="@name" />
                     </xsl:apply-templates>
+                    
+                    <div class="clear"></div>
                 </div>
 
                 <xsl:call-template name="output.parser.js" />
@@ -213,27 +221,16 @@
         <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html></xsl:text>
         <html>
             <head>
-                <title>
-                    <xsl:value-of select="$TITLE" />
-                    - Package summary
-                </title>
+                <title><xsl:value-of select="$TITLE" /> - Package summary</title>
                 <link href="boilerplate.css" rel="stylesheet" type="text/css" />
                 <link href="stylesheet.css" rel="stylesheet" type="text/css" />
             </head>
             <body>
-
-                <div id="report">
-                    <xsl:call-template name="navigation.links">
-                        <xsl:with-param name="package.name" select="''" />
-                    </xsl:call-template>
-
-                    <div class="grailslogo"></div>
-
-                    <hgroup class="clearfix">
-                        <h1>
-                            <xsl:value-of select="$TITLE" />
-                            - Summary
-                        </h1>
+            
+                <div id="report" class="container container_8">
+                    <div class="grid_6 alpha">
+                        <div class="grailslogo"></div>
+                        <h1><xsl:value-of select="$TITLE" />- Summary </h1>
 
                         <p class="intro">
                             <xsl:call-template name="test.count.summary">
@@ -242,7 +239,15 @@
                                 <xsl:with-param name="failures" select="sum(testsuite/@failures)" />
                             </xsl:call-template>
                         </p>
-                    </hgroup>
+                    </div>
+                    
+                    <div class="grid_2 omega">
+                        <xsl:call-template name="navigation.links">
+                            <xsl:with-param name="package.name" select="''" />
+                        </xsl:call-template>
+                    </div>
+
+                    <div class="clear"></div>
 
                     <xsl:for-each select="./testsuite[not(./@package = preceding-sibling::testsuite/@package)]">
                         <xsl:sort select="@errors + @failures" data-type="number" order="descending" />
@@ -252,6 +257,8 @@
                             <xsl:with-param name="packageName" select="@package" />
                         </xsl:call-template>
                     </xsl:for-each>
+                    
+                    <div class="clear"></div>
                 </div>
 
             </body>
@@ -280,10 +287,8 @@
         <div>
             <xsl:attribute name="class">testsuite <xsl:value-of select="$cssclass" /></xsl:attribute>
 
-            <header>
-                <h2>
-                    <xsl:value-of select="$packageName" />
-                </h2>
+            <div class="header">
+                <h2><xsl:value-of select="$packageName" /></h2>
                 <h3>
                     <xsl:call-template name="test.count.summary">
                         <xsl:with-param name="tests" select="$testCount" />
@@ -291,8 +296,8 @@
                         <xsl:with-param name="failures" select="$failureCount" />
                     </xsl:call-template>
                 </h3>
-            </header>
-
+            </div>
+            
             <ul class="clearfix">
                 <xsl:for-each select="/testsuites/testsuite[@package = $packageName]">
                     <xsl:sort select="@name" />
@@ -344,10 +349,8 @@
         <div>
             <xsl:attribute name="class">testsuite <xsl:value-of select="$cssclass" /></xsl:attribute>
 
-            <header>
-                <h2>
-                    <xsl:value-of select="@name" />
-                </h2>
+            <div class="header">
+                <h2><xsl:value-of select="@name" /></h2>
                 <h3>
                     <xsl:call-template name="test.count.summary">
                         <xsl:with-param name="tests" select="@tests" />
@@ -355,12 +358,12 @@
                         <xsl:with-param name="failures" select="@failures" />
                     </xsl:call-template>
                 </h3>
-            </header>
+            </div>
 
             <xsl:apply-templates select="testcase" mode="tableline">
             </xsl:apply-templates>
 
-            <footer class="clearfix output">
+            <div class="clearfix output footer">
                 <div class="sysout">
                     <h2>Standard output</h2>
                     <pre class="stdout">
@@ -373,7 +376,8 @@
                         <xsl:value-of select="system-err" />
                     </pre>
                 </div>
-            </footer>
+            </div>
+            <div class="clear"></div>
         </div>
     </xsl:template>
     
@@ -387,11 +391,11 @@
             </xsl:choose>
         </xsl:variable>
 
-        <div>
+        <div class="grid_8">
             <xsl:attribute name="data-name"><xsl:value-of select="@name" /></xsl:attribute>
-            <xsl:attribute name="class">testcase clearfix <xsl:value-of select="$cssclass" /></xsl:attribute>
+            <xsl:attribute name="class">testcase clearfix <xsl:value-of select="$cssclass" /> grid_8 alpha omega</xsl:attribute>
 
-            <div class="metadata">
+            <div class="grid_3 alpha">
                 <p>
                     <span>
                         <xsl:attribute name="class">icon <xsl:value-of select="$cssclass" /></xsl:attribute>
@@ -402,17 +406,14 @@
                     </b>
                 </p>
 
-                <p class="summary">
-                    Executed in
-                    <xsl:value-of select="@time" />
-                    seconds.
-                </p>
+                <p class="summary">Executed in <xsl:value-of select="@time" /> seconds.</p>
             </div>
-
-
-            <div class="outputinfo">
+    
+            <div class="grid_5 omega outputinfo">
                 <xsl:apply-templates select="failure | error" mode="testcase.details" />
             </div>
+            
+            <div class="clear"></div>
         </div>
     </xsl:template>
 
@@ -510,34 +511,20 @@
     <!-- this is the stylesheet css to use for nearly everything -->
     <xsl:template name="stylesheet.css">
         <![CDATA[
+
+        
         #report {
-            -o-border-radius: 8px;
-            -moz-border-radius: 8px;
-            -webkit-border-radius: 8px;
             border-radius: 8px;
-    
-            -moz-box-shadow: 0 0 8px #F5F5F5;
-            -webkit-box-shadow: 0 0 8px #F5F5F5;
             box-shadow: 0 0 8px #F5F5F5;
     
             background-color: white;
             margin: 10px auto;
-            max-width: 1200px;
             padding: 10px 15px;
-            width: 70%;
-        }
-        
-        @media screen and (max-width: 1200px) {
-            #report {
-                width: 90% !important;
-            }
         }
 
         /* Navigation links between the various views
         - - - - - - - - - - - - - - - - - - - - - - */
         #navigationlinks {
-            width: 300px;
-            float: right;
             text-align: right;
         }
 
@@ -558,17 +545,11 @@
         - - - - - - */
 
         .testsuite {
-            -moz-border-radius: 5px;
-            -webkit-border-radius: 5px;
             border-radius: 5px;
-    
-            -moz-box-shadow: 0 0 4px #F8F8F8;
-            -webkit-box-shadow: 0 0 4px #F8F8F8;
             box-shadow: 0 0 4px #F8F8F8;
-    
+
+            background-color: F7F7F7;    
             background: -moz-linear-gradient(center top , #F7F7F7, #FEFEFE);
-            background: -webkit-gradient(linear, left top, left bottom, from(#F7F7F7), to(#FEFEFE));
-            background: linear-gradient(center top , #F7F7F7, #FEFEFE);
     
             border: 1px solid #EEEEEE;
             margin: 20px 0;
@@ -576,56 +557,36 @@
             width: 100%;
         }
 
-        .testsuite header {
+        .testsuite .header {
             color: white;
             padding: 5px 7px;
             text-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
             font-size: 1.3em;
     
-            -moz-border-radius: 5px 5px 0 0;
-            -webkit-border-radius: 5px 5px 0 0;
             border-radius: 5px 5px 0 0;
-    
-            -moz-box-shadow: 0 0 13px rgba(255, 255, 255, 0.3) inset;
-            -webkit-box-shadow: 0 0 13px rgba(255, 255, 255, 0.3) inset;
             box-shadow: 0 0 13px rgba(255, 255, 255, 0.3) inset;
         }
 
-        .testsuite.error header {
-            background-color: #BC2F2F;
+        .testsuite.error .header {
+            background-color: #BC2F2F;            
             background: -moz-linear-gradient(center top , #BC2F2F, #C96952);
-            background: -webkit-gradient(linear, left top, left bottom, from(#BC2F2F), to(#C96952));
-            background: linear-gradient(center top , #BC2F2F, #C96952);
-    
             border-bottom: 1px solid #BE5B5B;
         }
 
-        .testsuite.failure header {
+        .testsuite.failure .header {
             background-color: #FFB75B;
             background: -moz-linear-gradient(center top , #FFB75B, #E69814);
-            background: -webkit-gradient(linear, left top, left bottom, from(#FFB75B), to(#E69814));
-            background: linear-gradient(center top , #FFB75B, #E69814);
-    
             border-bottom: 1px solid #CD912B;
         }
 
-        .testsuite.success header {
+        .testsuite.success .header {
             background-color: #A6CC3B;
             background: -moz-linear-gradient(center top , #A6CC3B, #CBD53B);
-            background: -webkit-gradient(linear, left top, left bottom, from(#A6CC3B), to(#CBD53B));
-            background: linear-gradient(center top , #A6CC3B, #CBD53B);
-    
             border-bottom: 1px solid #C4D5B6;
         }
 
-        .testsuite header h2, h3 {
-            margin: 0;
-            padding: 0;
-        }
-
-        .testsuite header h3 {
-            font-size: 0.8em;
-        }
+        .testsuite header h2, h3 { margin: 0; padding: 0; }
+        .testsuite header h3 { font-size: 0.8em; }
 
         .testsuite .name {
             width: 50%;
@@ -638,6 +599,8 @@
         .testsuite .testcase {
             padding: 5px 0;
         }
+        
+        pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; padding: 15px; }
 
         /* Link to individual test cases
         - - - - - - - - - - - - - - - - - */
@@ -652,8 +615,8 @@
         }
 
         .packagelink:hover {
-            -moz-border-radius: 3px 3px 3px 3px;
-            background-color: #f9f9f9;
+            border-radius: 4px;
+            background-color: #f7f7f7;
             border: 1px solid #ddd;
         }
 
@@ -693,11 +656,6 @@
             border-top: 1px solid #EEEEEE;
         }
 
-        .testcase .metadata {
-            float: left;
-            width: 30%;
-        }
-
         .testcase .message {
             font-size: 1.1em;
             font-weight: bold;
@@ -709,41 +667,26 @@
             color: #444;
         }
 
-        .testcase .outputinfo {
-            float: left;
-            width: 69%;
-        }
-
         .outputinfo p { margin-top: 9px; }
 
         /* output is parsed using javascript and not visible by default.
         I don't think that having a non-javascript fallback is important
         as most Grails developers won't be using IE 6 :D */
 
-        .testsuite footer { display: none; }
+        .testsuite .footer { display: none; }
         p { padding: 4px; }
 
-        footer.output {
-            -moz-border-radius: 0 0 5px 5px;
-            -webkit-border-radius: 0 0 5px 5px;
+        .footer.output {
             border-radius: 0 0 5px 5px;
-    
+            background-color: #F8F8F8;
             background: -moz-linear-gradient(center top , #F8F8F8, #F2F2F2);
-            background: -webkit-gradient(linear, left top, left bottom, from(#F8F8F8), to(#F2F2F2));
-            background: linear-gradient(center top , #F8F8F8, #F2F2F2);
-    
             border-top: 1px solid #EEEEEE;
             margin-top: 10px;
         }
 
-        footer.output h2 { padding: 5px 0 0 5px; }
-
-        footer.output .sysout, .syserr {
-            float: left;
-            width: 50%;
-        }
-
-        footer.output pre { margin: 5px; }
+        .footer.output h2 { padding: 5px 0 0 5px; }
+        .footer.output .sysout, .syserr { float: left; width: 49%; }
+        .footer.output pre { margin: 5px; }
 
         .errorMessage {
             color: #AA0E0E;
@@ -766,8 +709,6 @@
         a:hover { }
 
         pre {
-            -moz-border-radius: 5px;
-            -webkit-border-radius: 5px;
             border-radius: 5px;
     
             margin-bottom: 8px;
@@ -808,6 +749,55 @@
             background-image:
             url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABMlBMVEX///8IkwBn+FkitRMGSAArvRxy9mQGRgAIZgARmQJJ2jqc/5AIlgAJmwAJnQANnwAZrQoLSAQUpQUHkwAVhQkUpAYXqwcKnwAHUgUBRQECTQARXQ8CTwEHWAQITwcEVAENXwoYdhIjgB8XeBAUdw4XdxAZfxEehRcFSgIFTAMidCAGVwMLYggQbA0SUxAWchIlfSBJj0Q6jzQogyM1jy9AvzYwoSQwsSREkj9Xy05mtF0UngYXlQsgoxMltxUvsCI3ySg9wjFBmTpJ2DlM1j9Rk0lW50pZ50pan1JaslFdnlZe6U9f11NgxFVl8Fhn9Vhq0GBv/mB022l4/2l50W9853GB7neE73iE8nmR5IiW5Y6f35ig5Zmj352l6p+q4qWu2qm33LS347O517a63bW917qYo5MyAAAAO3RSTlMABAUGCAgICQkJCQkLCwsLDBATFBY1PEGksrS3u7u8vb7NzdDR0dHR29zc3d3d3d3i7O309vj5+fn5/rsIIGkAAACPSURBVBgZfcHTEkIBAAXAk23btm3btv7/F6ppmlsPtQv8Q8I3vkmDTzzLra0GgWu7NMs1FQCxDA8C66mVyfpFgCScVABC+7mXzzkZgDR0PUblFMdhWCy4qACU6eluEwlux5WSh4knfby7Wu9njaqXhRdtorNYDuo+Gt4MsdGkH2CDoEvN3XR8Mpo5+EbGT3eZ2hQgcUQ3SwAAAABJRU5ErkJggg==");
         }
+
+        
+        /* 960gs */
+        body{min-width:1200px}
+		.container_8{margin-left:auto;margin-right:auto;width:1200px}
+		.grid_1,.grid_2,.grid_3,.grid_4,.grid_5,.grid_6,.grid_7,.grid_8{display:inline;float:left;position:relative;margin-left:15px;margin-right:15px}
+		.push_1,.pull_1,.push_2,.pull_2,.push_3,.pull_3,.push_4,.pull_4,.push_5,.pull_5,.push_6,.pull_6,.push_7,.pull_7,.push_8,.pull_8{position:relative}
+		.alpha{margin-left:0}
+		.omega{margin-right:0}
+		.container_8 .grid_1{width:120px}
+		.container_8 .grid_2{width:270px}
+		.container_8 .grid_3{width:420px}
+		.container_8 .grid_4{width:570px}
+		.container_8 .grid_5{width:720px}
+		.container_8 .grid_6{width:870px}
+		.container_8 .grid_7{width:1020px}
+		.container_8 .grid_8{width:1170px}
+		.container_8 .prefix_1{padding-left:150px}
+		.container_8 .prefix_2{padding-left:300px}
+		.container_8 .prefix_3{padding-left:450px}
+		.container_8 .prefix_4{padding-left:600px}
+		.container_8 .prefix_5{padding-left:750px}
+		.container_8 .prefix_6{padding-left:900px}
+		.container_8 .prefix_7{padding-left:1050px}
+		.container_8 .suffix_1{padding-right:150px}
+		.container_8 .suffix_2{padding-right:300px}
+		.container_8 .suffix_3{padding-right:450px}
+		.container_8 .suffix_4{padding-right:600px}
+		.container_8 .suffix_5{padding-right:750px}
+		.container_8 .suffix_6{padding-right:900px}
+		.container_8 .suffix_7{padding-right:1050px}
+		.container_8 .push_1{left:150px}
+		.container_8 .push_2{left:300px}
+		.container_8 .push_3{left:450px}
+		.container_8 .push_4{left:600px}
+		.container_8 .push_5{left:750px}
+		.container_8 .push_6{left:900px}
+		.container_8 .push_7{left:1050px}
+		.container_8 .pull_1{left:-150px}
+		.container_8 .pull_2{left:-300px}
+		.container_8 .pull_3{left:-450px}
+		.container_8 .pull_4{left:-600px}
+		.container_8 .pull_5{left:-750px}
+		.container_8 .pull_6{left:-900px}
+		.container_8 .pull_7{left:-1050px}
+		.clear{clear:both;display:block;overflow:hidden;visibility:hidden;width:0;height:0}
+		.clearfix:before,.clearfix:after{content:'\0020';display:block;overflow:hidden;visibility:hidden;width:0;height:0}
+		.clearfix:after{clear:both}
+		.clearfix{zoom:1}
 
         ]]>
     </xsl:template>
@@ -898,6 +888,7 @@
         </xsl:comment>
         <script language="javascript">
 <![CDATA[
+
 /**
  * The JUnit report format is incredibly stuipd in the
  * sense that it accumulates output from all test methods
@@ -948,7 +939,7 @@
     function appendTestMethodOutput(text, header) {
         var testOutput = new TestMethodOutput(header);
         
-        var lines = text.split("\n");        
+        var lines = text.split(/\r\n|\r|\n/);        
         for (var i in lines) {
             var line = lines[i];
             var matches = line.match(/^--Output from (.*)--$/);
@@ -992,7 +983,7 @@
             node.appendChild(preNode);
             
             var outputContainer = findElementByTagClassAndParent("div", "outputinfo", domNode);
-            outputContainer.appendChild(node);
+            outputContainer.appendChild(node); 
         }
         
         this.reset = function() {
@@ -1003,10 +994,11 @@
     
     function getTestcaseElementByName(name) {
         var divElements = document.getElementsByTagName("div");
-        for (var i in divElements) {
-            var element = divElements[i];
-            if (element.getAttribute("data-name") === name) {
-                return element;
+        var elementCount = divElements.length;
+        for (var i=0; i<elementCount; i++) {
+            var el = divElements[i];
+            if (el.getAttribute("data-name") === name) {
+                return el;
             }
         }
     }
@@ -1026,7 +1018,7 @@
     function trimString(str) {
         return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
     }
-
+    
 })();
 ]]>
         </script>
@@ -1053,88 +1045,25 @@
         vertical-align: baseline;
         }
 
-        article, aside, details, figcaption, figure,
-        footer, header, hgroup, menu, nav,
-        section {
-        display: block;
-        }
-
-        blockquote, q { quotes: none; }
-        blockquote:before, blockquote:after,
-        q:before, q:after { content: ''; content: none; }
-        ins { background-color: #ff9; color: #000; text-decoration: none; }
-        mark { background-color: #ff9; color: #000; font-style: italic; font-weight: bold; }
-        del { text-decoration: line-through; }
-        abbr[title], dfn[title] { border-bottom: 1px dotted; cursor: help; }
-        table { border-collapse: collapse; border-spacing: 0; }
-        hr { display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0; }
-        input, select {
-        vertical-align: middle; }
-
         body { font:13px/1.231 sans-serif; *font-size:small; }
         select, input, textarea, button { font:99% sans-serif; }
         pre, code, kbd, samp { font-family: monospace, sans-serif; }
 
         html { overflow-y: scroll; }
         a:hover, a:active { outline: none; }
-        ul, ol { }
-        ol { list-style-type:
-        decimal; }
-        nav ul, nav li { margin: 0; list-style:none; list-style-image: none; }
-        small { font-size: 85%; }
-        strong, th { font-weight: bold; }
-        td { vertical-align: top; }
-
-        sub, sup { font-size: 75%; line-height: 0; position: relative; }
-        sup { top: -0.5em; }
-        sub { bottom: -0.25em; }
-
-        pre { white-space:
-        pre; white-space: pre-wrap; word-wrap: break-word; padding: 15px; }
-        textarea { overflow: auto; }
-        .ie6 legend, .ie7 legend { margin-left: -7px; }
-        input[type="radio"] { vertical-align: text-bottom; }
-        input[type="checkbox"] { vertical-align: bottom; }
-        .ie7 input[type="checkbox"] { vertical-align:
-        baseline; }
-        .ie6 input { vertical-align: text-bottom; }
-        label, input[type="button"], input[type="submit"], input[type="image"], button { cursor: pointer; }
-        button, input, select, textarea { margin: 0; }
-        input:valid, textarea:valid { }
-        input:invalid, textarea:invalid { border-radius: 1px;
-        -moz-box-shadow: 0px 0px 5px red; -webkit-box-shadow: 0px 0px 5px red; box-shadow: 0px 0px 5px red; }
-        .no-boxshadow input:invalid, .no-boxshadow textarea:invalid { background-color: #f0dddd; }
 
         ::-moz-selection{ background: #FF9800; color:#fff; text-shadow: none; }
-        ::selection { background:
-        #FF9800; color:#fff; text-shadow: none; }
+        ::selection { background: #FF9800; color:#fff; text-shadow: none; }
         a:link { -webkit-tap-highlight-color: #FF9800; }
-
-        button { width: auto; overflow: visible; }
-        .ie7 img { -ms-interpolation-mode: bicubic; }
 
         body, select, input, textarea { color: #444; }
         h1, h2, h3, h4, h5, h6 { font-weight: bold; }
-        a, a:active, a:visited {
-        color: #2C3545; }
-        a:hover { color: #036; }
 
-
-        /**
-        * Primary styles
-        *
-        * Author:
-        */
-        .ir { display: block; text-indent: -999em; overflow: hidden; background-repeat: no-repeat; text-align: left; direction: ltr; }
         .hidden { display: none; visibility: hidden; }
-        .visuallyhidden { border: 0; clip: rect(0 0 0
-        0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
+        .visuallyhidden { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
         .visuallyhidden.focusable:active,
         .visuallyhidden.focusable:focus { clip: auto; height: auto; margin: 0; overflow: visible; position: static; width: auto; }
         .invisible { visibility: hidden; }
-        .clearfix:before, .clearfix:after { content: "\0020"; display: block; height: 0; overflow: hidden; }
-        .clearfix:after { clear: both; }
-        .clearfix { zoom: 1; }
     </xsl:template>
 
 
