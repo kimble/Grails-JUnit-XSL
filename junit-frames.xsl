@@ -41,12 +41,7 @@
         <redirect:write file="{$output.dir}/stylesheet.css">
             <xsl:call-template name="stylesheet.css" />
         </redirect:write>
-
-        <!-- create the boilerplate.css -->
-        <redirect:write file="{$output.dir}/boilerplate.css">
-            <xsl:call-template name="boilerplate.css" />
-        </redirect:write>
-
+        
     </xsl:template>
 
 
@@ -511,6 +506,45 @@
     <!-- this is the stylesheet css to use for nearly everything -->
     <xsl:template name="stylesheet.css">
         <![CDATA[
+        
+        /* html5 boilerplate */
+        html, body, div, span, object, iframe,
+        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+        abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp,
+        small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li,
+        fieldset, form, label, legend,
+        table, caption, tbody, tfoot, thead, tr, th, td,
+        article,
+        aside, canvas, details, figcaption, figure,
+        time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+        }
+
+        body { font:13px/1.231 sans-serif; *font-size:small; }
+        select, input, textarea, button { font:99% sans-serif; }
+        pre, code, kbd, samp { font-family: monospace, sans-serif; }
+
+        html { overflow-y: scroll; }
+        a:hover, a:active { outline: none; }
+
+        ::-moz-selection{ background: #FF9800; color:#fff; text-shadow: none; }
+        ::selection { background: #FF9800; color:#fff; text-shadow: none; }
+        a:link { -webkit-tap-highlight-color: #FF9800; }
+
+        body, select, input, textarea { color: #444; }
+        h1, h2, h3, h4, h5, h6 { font-weight: bold; }
+
+        .hidden { display: none; visibility: hidden; }
+        .visuallyhidden { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
+        .visuallyhidden.focusable:active,
+        .visuallyhidden.focusable:focus { clip: auto; height: auto; margin: 0; overflow: visible; position: static; width: auto; }
+        .invisible { visibility: hidden; }
+        /* html5 boilerpalte end */
 
         
         #report {
@@ -574,7 +608,7 @@
         }
 
         .testsuite.failure .header {
-            background-color: #FFB75B;
+            background-color: #E69814;
             background: -moz-linear-gradient(center top , #FFB75B, #E69814);
             border-bottom: 1px solid #CD912B;
         }
@@ -585,8 +619,8 @@
             border-bottom: 1px solid #C4D5B6;
         }
 
-        .testsuite header h2, h3 { margin: 0; padding: 0; }
-        .testsuite header h3 { font-size: 0.8em; }
+        .testsuite .header h2, h3 { margin: 0; padding: 0; }
+        .testsuite .header h3 { font-size: 0.8em; }
 
         .testsuite .name {
             width: 50%;
@@ -824,9 +858,6 @@
     <xsl:template name="create.resource.links">
         <xsl:param name="package.name" />
         <link rel="stylesheet" type="text/css" title="Style">
-            <xsl:attribute name="href"><xsl:if test="not($package.name = 'unnamed package')"><xsl:call-template name="path"><xsl:with-param name="path" select="$package.name" /></xsl:call-template></xsl:if>boilerplate.css</xsl:attribute>
-        </link>
-        <link rel="stylesheet" type="text/css" title="Style">
             <xsl:attribute name="href"><xsl:if test="not($package.name = 'unnamed package')"><xsl:call-template name="path"><xsl:with-param name="path" select="$package.name" /></xsl:call-template></xsl:if>stylesheet.css</xsl:attribute>
         </link>
     </xsl:template>
@@ -1022,48 +1053,6 @@
 })();
 ]]>
         </script>
-    </xsl:template>
-
-
-    <!-- HTML5 ✰ Boilerplate -->
-    <xsl:template name="boilerplate.css">
-        html, body, div, span, object, iframe,
-        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-        abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp,
-        small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li,
-        fieldset, form, label, legend,
-        table, caption, tbody, tfoot, thead, tr, th, td,
-        article,
-        aside, canvas, details, figcaption, figure,
-        footer, header, hgroup, menu, nav, section, summary,
-        time, mark, audio, video {
-        margin: 0;
-        padding: 0;
-        border: 0;
-        font-size: 100%;
-        font: inherit;
-        vertical-align: baseline;
-        }
-
-        body { font:13px/1.231 sans-serif; *font-size:small; }
-        select, input, textarea, button { font:99% sans-serif; }
-        pre, code, kbd, samp { font-family: monospace, sans-serif; }
-
-        html { overflow-y: scroll; }
-        a:hover, a:active { outline: none; }
-
-        ::-moz-selection{ background: #FF9800; color:#fff; text-shadow: none; }
-        ::selection { background: #FF9800; color:#fff; text-shadow: none; }
-        a:link { -webkit-tap-highlight-color: #FF9800; }
-
-        body, select, input, textarea { color: #444; }
-        h1, h2, h3, h4, h5, h6 { font-weight: bold; }
-
-        .hidden { display: none; visibility: hidden; }
-        .visuallyhidden { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
-        .visuallyhidden.focusable:active,
-        .visuallyhidden.focusable:focus { clip: auto; height: auto; margin: 0; overflow: visible; position: static; width: auto; }
-        .invisible { visibility: hidden; }
     </xsl:template>
 
 
