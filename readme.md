@@ -3,7 +3,9 @@ Alternative JUnit theme for Grails
 
 Install instructions
 --------------------
-Just replace $GRAILS_HOME/lib/junit-frames.xsl with the one from this repository (you should probably make a backup first). 
+Just replace `$GRAILS_HOME/lib/junit-frames.xsl` with the one from this repository (you should probably make a backup first). 
+
+*Update:* This is no longer necessarry as it has become a part of the standard Grails distribution!
 
 Browser compability
 --------------------
