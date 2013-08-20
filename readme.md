@@ -5,7 +5,14 @@ Install instructions
 --------------------
 Just replace `$GRAILS_HOME/lib/junit-frames.xsl` with the one from this repository (you should probably make a backup first). 
 
-*__Update:__ This is no longer necessarry as it has become a part of the standard Grails distribution!*
+*__Update:__ This is no longer necessarry as it has become a part of the standard Grails distribution! http://grails.org/doc/2.1.1/guide/introduction.html#developmentEnvironmentFeatures* 
+
+
+Sample screenshot
+-----------------
+
+![Report sample showing failed test](https://raw.github.com/kimble/Grails-JUnit-XSL/master/screenshots/failure.png "Failed test")
+
 
 Browser compability
 --------------------
